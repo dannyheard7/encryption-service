@@ -45,6 +45,7 @@ namespace EncryptionService.Test.Encryption.AES
         {
             var key = _aesKeyCreator.Create(1);
             _mockKeyManager.Setup(x => x.GetLatest()).Returns(key);
+            _mockKeyManager.Setup(x => x.GetByVersion(key.Version)).Returns(key);
 
             var stringToEncrypt = "valueToEncrypt";
             var encryptedValue = _aesEncryptionService.Encrypt(stringToEncrypt);

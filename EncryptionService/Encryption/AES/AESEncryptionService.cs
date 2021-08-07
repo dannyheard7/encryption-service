@@ -14,9 +14,17 @@ namespace EncryptionService.Encryption.AES
             _encryptionKeyManager = encryptionKeyManager;
         }
 
-        private AESKey GetKey()
+        private AESKey GetLatestKey()
         {
             var key = _encryptionKeyManager.GetLatest();
+            if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
+
+            return aesKey;
+        }
+        
+        private AESKey GetKeyByVersion(int version)
+        {
+            var key = _encryptionKeyManager.GetByVersion(version);
             if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
 
             return aesKey;
@@ -33,7 +41,7 @@ namespace EncryptionService.Encryption.AES
         
         public string Encrypt(string value)
         {
-            var aesKey = GetKey();
+            var aesKey = GetLatestKey();
             var iv = CreateIv();
             
             using var aes = Aes.Create();
@@ -56,13 +64,12 @@ namespace EncryptionService.Encryption.AES
         public DecryptionResult Decrypt(string value)
         {
             var decryptionRequest = new AESDecryptionRequest(value);
-
-            var aesKey = GetKey();
+            var aesKey = GetKeyByVersion(decryptionRequest.EncryptionKeyVersion);
             
             using var aes = Aes.Create();
             var transform = aes.CreateDecryptor(aesKey.GetBytes(), decryptionRequest.Iv);
             
-            string plaintext = string.Empty;
+            string plaintext;
             
             using (MemoryStream memoryStream = new MemoryStream(decryptionRequest.EncryptedData))
             {
