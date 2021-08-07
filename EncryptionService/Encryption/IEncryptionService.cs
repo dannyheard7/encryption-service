@@ -4,6 +4,6 @@ namespace EncryptionService.Encryption
     {
         public string Encrypt(string value);
 
-        public string Decrypt(string value);
+        public DecryptionResult Decrypt(string value);
     }
 }

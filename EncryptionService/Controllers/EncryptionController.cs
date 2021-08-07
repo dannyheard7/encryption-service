@@ -1,5 +1,7 @@
+using System;
 using EncryptionService.Controllers.Models;
 using EncryptionService.Encryption;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EncryptionService.Controllers
@@ -16,15 +18,30 @@ namespace EncryptionService.Controllers
         }
 
         [HttpPost("encrypt")]
-        public string Encrypt([FromBody] Value value)
+        public ActionResult<Value> Encrypt([FromBody] Value value)
         {
-            return _encryptionService.Encrypt(value.StringValue);
+            var encryptedValue = _encryptionService.Encrypt(value.StringValue);
+            return new Value(encryptedValue);
         }
         
         [HttpPost("decrypt")]
-        public string Decrypt([FromBody] Value value)
+        public ActionResult<Value> Decrypt([FromBody] Value value)
         {
-            return _encryptionService.Decrypt(value.StringValue);
+            var decryptedValue = _encryptionService.Decrypt(value.StringValue);
+
+            if (decryptedValue is SucceededDecryptionResult succeededDecryptionResult)
+                return new Value(succeededDecryptionResult.DecryptedValue);
+            
+            if (decryptedValue is FailedDecryptionResult failedDecryptionResult)
+            {
+                return failedDecryptionResult.Error switch
+                {
+                    DecryptionError.UnavailableEncryptionKey => new BadRequestObjectResult("Encryption key not available for this value"),
+                    _ => new StatusCodeResult(StatusCodes.Status500InternalServerError)
+                };
+            }
+
+            throw new NotImplementedException($"No handler for result of type: {decryptedValue.GetType()}");
         }
     }
 }
