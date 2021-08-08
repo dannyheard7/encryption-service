@@ -1,7 +1,7 @@
 using System;
+using System.ComponentModel;
 using EncryptionService.Controllers.Models;
 using EncryptionService.Encryption;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EncryptionService.Controllers
@@ -37,7 +37,8 @@ namespace EncryptionService.Controllers
                 return failedDecryptionResult.Error switch
                 {
                     DecryptionError.UnavailableEncryptionKey => new BadRequestObjectResult("Encryption key not available for this value"),
-                    _ => new StatusCodeResult(StatusCodes.Status500InternalServerError)
+                    DecryptionError.IncorrectFormat => new BadRequestObjectResult("Value has incorrect format"),
+                    _ => throw new InvalidEnumArgumentException(nameof(failedDecryptionResult.Error))
                 };
             }
 

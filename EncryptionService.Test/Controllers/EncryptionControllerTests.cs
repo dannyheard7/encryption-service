@@ -57,13 +57,29 @@ namespace EncryptionService.Test.Controllers
 
             _mockEncryptionService
                 .Setup(x => x.Decrypt(encryptedValue.StringValue))
-                .Returns(FailedDecryptionResult.UnavailableEncryptionKey);
+                .Returns(new FailedDecryptionResult(DecryptionError.UnavailableEncryptionKey));
             
             var result = _encryptionController.Decrypt(encryptedValue);
             
             result.Should().BeOfType<ActionResult<Value>>();
             result.Result.Should().BeOfType<BadRequestObjectResult>();
             (result.Result as BadRequestObjectResult)!.Value.Should().Be("Encryption key not available for this value");
+        }
+        
+        [Fact]
+        public void Decrypt_Returns_BadRequest_If_EncryptedValue_Has_IncorrectFormat()
+        {
+            var encryptedValue = new Value("encryptedValue");
+
+            _mockEncryptionService
+                .Setup(x => x.Decrypt(encryptedValue.StringValue))
+                .Returns(new FailedDecryptionResult(DecryptionError.IncorrectFormat));
+            
+            var result = _encryptionController.Decrypt(encryptedValue);
+            
+            result.Should().BeOfType<ActionResult<Value>>();
+            result.Result.Should().BeOfType<BadRequestObjectResult>();
+            (result.Result as BadRequestObjectResult)!.Value.Should().Be("Value has incorrect format");
         }
     }
 }
