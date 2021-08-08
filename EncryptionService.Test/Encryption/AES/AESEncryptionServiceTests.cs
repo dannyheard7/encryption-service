@@ -81,5 +81,12 @@ namespace EncryptionService.Test.Encryption.AES
             decryptionResult.Should().BeOfType<SucceededDecryptionResult>();
             (decryptionResult as SucceededDecryptionResult)!.DecryptedValue.Should().Be(valueToEncrypt);
         }
+        
+        [Fact]
+        public void Rotate_Calls_IKeyManager_Rotate_With_AESKeyCreator()
+        {
+            _aesEncryptionService.RotateKey();
+            _mockKeyManager.Verify(x => x.Rotate(It.IsAny<AESKeyCreator>()), Times.Once);
+        }
     }
 }

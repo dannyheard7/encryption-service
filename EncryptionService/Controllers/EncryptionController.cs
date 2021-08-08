@@ -44,5 +44,12 @@ namespace EncryptionService.Controllers
 
             throw new NotImplementedException($"No handler for result of type: {decryptedValue.GetType()}");
         }
+        
+        [HttpPost("rotateKey")]
+        public ActionResult RotateKey()
+        {
+            _encryptionService.RotateKey();
+            return Ok();
+        }
     }
 }

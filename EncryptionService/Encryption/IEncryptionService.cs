@@ -5,5 +5,7 @@ namespace EncryptionService.Encryption
         public string Encrypt(string value);
 
         public DecryptionResult Decrypt(string value);
+
+        public void RotateKey();
     }
 }

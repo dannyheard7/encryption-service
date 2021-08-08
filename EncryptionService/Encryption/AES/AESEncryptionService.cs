@@ -69,5 +69,10 @@ namespace EncryptionService.Encryption.AES
                 return new FailedDecryptionResult(DecryptionError.UnavailableEncryptionKey);
             }
         }
+
+        public void RotateKey()
+        {
+            _encryptionKeyManager.Rotate(new AESKeyCreator());
+        }
     }
 }
