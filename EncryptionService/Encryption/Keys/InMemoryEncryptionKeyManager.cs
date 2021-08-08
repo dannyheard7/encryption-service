@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace EncryptionService.Encryption.Keys
 {
+    // Storing encryption keys in memory is not secure - For production use a key management system (KMS) should be used 
     public class InMemoryEncryptionKeyManager<T> : IEncryptionKeyManager<T> where T : class, IKey
     {
         private readonly int _maxNumberActiveKeys;

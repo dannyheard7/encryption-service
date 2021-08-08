@@ -58,7 +58,7 @@ namespace EncryptionService.Test.Encryption.AES
             decryptionResult.Should().BeOfType<FailedDecryptionResult>();
             (decryptionResult as FailedDecryptionResult)!.Error.Should().Be(DecryptionError.IncorrectFormat);
         }
-        
+
         public static IEnumerable<object[]> ValuesToEncrypt =>
             new List<string[]>
             {
@@ -67,6 +67,19 @@ namespace EncryptionService.Test.Encryption.AES
                 new string[] { "" },
                 new string[] { new string('a', 5000) }
             };
+        
+        [Theory]
+        [MemberData(nameof(ValuesToEncrypt))]
+        public void Encrypt_Returns_Different_Values_For_Same_String(string valueToEncrypt)
+        {
+            var key = _aesKeyCreator.Create(1);
+            _mockKeyManager.Setup(x => x.GetLatest()).Returns(key);
+            
+            var encryptedValue1 = _aesEncryptionService.Encrypt(valueToEncrypt);
+            var encryptedValue2 = _aesEncryptionService.Encrypt(valueToEncrypt);
+
+            encryptedValue1.Should().NotBe(encryptedValue2);
+        }
         
         [Theory]
         [MemberData(nameof(ValuesToEncrypt))]
