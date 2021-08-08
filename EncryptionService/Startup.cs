@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EncryptionService.Encryption;
+using EncryptionService.Encryption.AES;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,11 +25,14 @@ namespace EncryptionService
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddResponseCompression();
             services.AddControllers();
+            services.AddHealthChecks();
+            
+            //services.AddSingleton<IEncryptionService, AESEncryptionService>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EncryptionService", Version = "v1" });
@@ -44,6 +49,7 @@ namespace EncryptionService
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EncryptionService v1"));
             }
 
+            app.UseResponseCompression();
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -53,6 +59,7 @@ namespace EncryptionService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
