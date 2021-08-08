@@ -1,4 +1,3 @@
-using System;
 using EncryptionService.Encryption;
 using EncryptionService.Encryption.AES;
 using EncryptionService.Encryption.Keys;
@@ -10,13 +9,13 @@ namespace EncryptionService.Test.Encryption.AES
 {
     public class AESEncryptionServiceTests
     {
-        private readonly Mock<IEncryptionKeyManager> _mockKeyManager;
+        private readonly Mock<IEncryptionKeyManager<AESKey>> _mockKeyManager;
         private readonly AESEncryptionService _aesEncryptionService;
         private readonly AESKeyCreator _aesKeyCreator;
 
         public AESEncryptionServiceTests()
         {
-            _mockKeyManager = new Mock<IEncryptionKeyManager>();
+            _mockKeyManager = new Mock<IEncryptionKeyManager<AESKey>>();
 
             _aesKeyCreator = new AESKeyCreator();
             _aesEncryptionService = new AESEncryptionService(_mockKeyManager.Object);
@@ -32,14 +31,7 @@ namespace EncryptionService.Test.Encryption.AES
             
             _mockKeyManager.Verify(x => x.GetLatest(), Times.Once);
         }
-        
-        [Fact]
-        public void Encrypt_Throws_Exception_If_Key_Is_Not_AESKey()
-        {
-            _mockKeyManager.Setup(x => x.GetLatest()).Returns((IKey)null);
-            _aesEncryptionService.Invoking(x => x.Encrypt("value")).Should().Throw<InvalidOperationException>();
-        }
-        
+
         [Fact]
         public void Decrypt_Returns_FailedDecryptionResult_UnavailableEncryptionKey_If_KeyVersion_DoesNotExist()
         {

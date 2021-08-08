@@ -1,4 +1,3 @@
-using System;
 using System.Security.Cryptography;
 using EncryptionService.Encryption.Keys;
 
@@ -12,7 +11,7 @@ namespace EncryptionService.Encryption.AES
             var rng = new RNGCryptoServiceProvider();
             rng.GetNonZeroBytes(bytes);
 
-            return new AESKey(bytes, version, true, DateTime.Now);
+            return new AESKey(bytes, version);
         }
     }
 }

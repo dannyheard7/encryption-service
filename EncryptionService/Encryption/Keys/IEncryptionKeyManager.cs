@@ -1,11 +1,11 @@
 namespace EncryptionService.Encryption.Keys
 {
-    public interface IEncryptionKeyManager
+    public interface IEncryptionKeyManager<T> where T: class, IKey
     {
-        public IKey GetLatest();
+        public T GetLatest();
         
-        public IKey GetByVersion(int version);
+        public T GetByVersion(int version);
 
-        public void Rotate(IEncryptionKeyCreator<IKey> creator);
+        public void Rotate(IEncryptionKeyCreator<T> creator);
     }
 }

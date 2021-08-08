@@ -9,9 +9,15 @@ content-type: application/json
 
 @encryptedValue = {{encrypt.response.body.value}}
 
+# @name decrypt
 POST https://localhost:5001/encryption/decrypt HTTP/1.1
 content-type: application/json
 
 {
     "value":  {{encryptedValue}}
 }
+
+
+
+# @name health-check
+GET https://localhost:5001/health HTTP/1.1

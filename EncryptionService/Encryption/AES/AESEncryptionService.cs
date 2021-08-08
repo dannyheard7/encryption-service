@@ -7,19 +7,11 @@ namespace EncryptionService.Encryption.AES
 {
     public class AESEncryptionService : IEncryptionService
     {
-        private readonly IEncryptionKeyManager _encryptionKeyManager;
+        private readonly IEncryptionKeyManager<AESKey> _encryptionKeyManager;
 
-        public AESEncryptionService(IEncryptionKeyManager encryptionKeyManager)
+        public AESEncryptionService(IEncryptionKeyManager<AESKey> encryptionKeyManager)
         {
             _encryptionKeyManager = encryptionKeyManager;
-        }
-
-        private AESKey GetLatestKey()
-        {
-            var key = _encryptionKeyManager.GetLatest();
-            if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
-
-            return aesKey;
         }
 
         private byte[] CreateIv()
@@ -33,7 +25,7 @@ namespace EncryptionService.Encryption.AES
         
         public string Encrypt(string value)
         {
-            var aesKey = GetLatestKey();
+            var aesKey = _encryptionKeyManager.GetLatest();
             var iv = CreateIv();
             
             using var aes = Aes.Create();
@@ -60,10 +52,8 @@ namespace EncryptionService.Encryption.AES
                 var decryptionRequest = new AESDecryptionRequest(value);
                 var key = _encryptionKeyManager.GetByVersion(decryptionRequest.EncryptionKeyVersion);
 
-                if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
-
                 using var aes = Aes.Create();
-                var transform = aes.CreateDecryptor(aesKey.GetBytes(), decryptionRequest.Iv);
+                var transform = aes.CreateDecryptor(key.GetBytes(), decryptionRequest.Iv);
 
                 using MemoryStream memoryStream = new MemoryStream(decryptionRequest.EncryptedData);
                 using CryptoStream cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read);
