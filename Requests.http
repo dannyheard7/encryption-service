@@ -1,23 +1,29 @@
+### Encrypt Value
 # @name encrypt
-POST https://localhost:5001/encryption/encrypt HTTP/1.1
+POST http://localhost:5000/encryption/encrypt HTTP/1.1
 content-type: application/json
 
 {
     "value": "somevalue"
 }
 
-
+### Decrypt EncryptedValue
 @encryptedValue = {{encrypt.response.body.value}}
 
 # @name decrypt
-POST https://localhost:5001/encryption/decrypt HTTP/1.1
+POST http://localhost:5000/encryption/decrypt HTTP/1.1
 content-type: application/json
 
 {
-    "value":  {{encryptedValue}}
+    "value":  "{{encryptedValue}}"
 }
 
+### Rotate EncryptionKey
+
+# @name rotate-key
+POST http://localhost:5000/encryption/rotateKey HTTP/1.1
 
 
+### Health Check
 # @name health-check
-GET https://localhost:5001/health HTTP/1.1
+GET http://localhost:5000/health HTTP/1.1
