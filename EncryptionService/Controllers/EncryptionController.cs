@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Net;
 using EncryptionService.Controllers.Models;
 using EncryptionService.Encryption;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EncryptionService.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1")]
     public class EncryptionController : ControllerBase
     {
         private readonly IEncryptionService _encryptionService;
@@ -18,6 +19,7 @@ namespace EncryptionService.Controllers
         }
 
         [HttpPost("encrypt")]
+        [ProducesResponseType(typeof(Value),(int)HttpStatusCode.OK)]
         public ActionResult<Value> Encrypt([FromBody] Value value)
         {
             var encryptedValue = _encryptionService.Encrypt(value.StringValue);
@@ -25,6 +27,8 @@ namespace EncryptionService.Controllers
         }
         
         [HttpPost("decrypt")]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(Value),(int)HttpStatusCode.OK)]
         public ActionResult<Value> Decrypt([FromBody] Value value)
         {
             var decryptedValue = _encryptionService.Decrypt(value.StringValue);
@@ -46,6 +50,7 @@ namespace EncryptionService.Controllers
         }
         
         [HttpPost("rotateKey")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public ActionResult RotateKey()
         {
             _encryptionService.RotateKey();

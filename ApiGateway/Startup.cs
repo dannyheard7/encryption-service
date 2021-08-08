@@ -1,12 +1,11 @@
-using EncryptionService.Encryption;
-using EncryptionService.Encryption.AES;
-using EncryptionService.Encryption.Keys;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
-namespace EncryptionService
+namespace ApiGateway
 {
     public class Startup
     {
@@ -16,31 +15,25 @@ namespace EncryptionService
         }
 
         public IConfiguration Configuration { get; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddResponseCompression();
-            services.AddControllers();
             services.AddHealthChecks();
-
-            services
-                .AddSingleton<IEncryptionService, AESEncryptionService>()
-                .AddSingleton<IEncryptionKeyManager<AESKey>, InMemoryEncryptionKeyManager<AESKey>>();
+            services.AddOcelot(Configuration);
         }
         
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEncryptionService encryptionService)
+        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            encryptionService.RotateKey(); // Initialise key
-            
             app.UseResponseCompression();
-
             app.UseRouting();
-
+            
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapHealthChecks("/health");
             });
+            
+            await app.UseOcelot();
         }
     }
 }

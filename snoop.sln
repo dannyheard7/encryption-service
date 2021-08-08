@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionService", "Encryp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncryptionService.Test", "EncryptionService.Test\EncryptionService.Test.csproj", "{4E4D0C33-F84B-432F-A6DF-BF9CD7FB53F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{C2B0F2AE-7200-47FA-B70A-A61510231572}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{4E4D0C33-F84B-432F-A6DF-BF9CD7FB53F6}.Release|x64.Build.0 = Release|Any CPU
 		{4E4D0C33-F84B-432F-A6DF-BF9CD7FB53F6}.Release|x86.ActiveCfg = Release|Any CPU
 		{4E4D0C33-F84B-432F-A6DF-BF9CD7FB53F6}.Release|x86.Build.0 = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|x64.Build.0 = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Debug|x86.Build.0 = Debug|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|x64.ActiveCfg = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|x64.Build.0 = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|x86.ActiveCfg = Release|Any CPU
+		{C2B0F2AE-7200-47FA-B70A-A61510231572}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,6 +1,14 @@
+# EncryptionService
+
+
+### Health Check
+# @name esHealthCheck
+GET http://localhost:5000/health HTTP/1.1
+
+
 ### Encrypt Value
-# @name encrypt
-POST http://localhost:5000/encryption/encrypt HTTP/1.1
+# @name esEncrypt
+POST http://localhost:5000/api/v1/encrypt HTTP/1.1
 content-type: application/json
 
 {
@@ -8,10 +16,10 @@ content-type: application/json
 }
 
 ### Decrypt EncryptedValue
-@encryptedValue = {{encrypt.response.body.value}}
+@encryptedValue = {{esEncrypt.response.body.value}}
 
-# @name decrypt
-POST http://localhost:5000/encryption/decrypt HTTP/1.1
+# @name esDecrypt
+POST http://localhost:5000/api/v1/decrypt HTTP/1.1
 content-type: application/json
 
 {
@@ -20,10 +28,39 @@ content-type: application/json
 
 ### Rotate EncryptionKey
 
-# @name rotate-key
-POST http://localhost:5000/encryption/rotateKey HTTP/1.1
+# @name esRotateKey
+POST http://localhost:5000/api/v1/rotateKey HTTP/1.1
 
 
-### Health Check
-# @name health-check
-GET http://localhost:5000/health HTTP/1.1
+
+# ApiGateway
+
+### ApiGateway Health Check
+# @name apigwHealthCheck
+GET http://localhost:7000/health HTTP/1.1
+
+
+### Encrypt Value
+# @name apigwEncrypt
+POST http://localhost:7000/encryption/encrypt HTTP/1.1
+content-type: application/json
+
+{
+    "value": "somevalue"
+}
+
+### Decrypt EncryptedValue
+@encryptedValue = {{apigwEncrypt.response.body.value}}
+
+# @name apigwDecrypt
+POST http://localhost:7000/encryption/decrypt HTTP/1.1
+content-type: application/json
+
+{
+    "value":  "{{encryptedValue}}"
+}
+
+### Rotate EncryptionKey
+
+# @name apigwRotateKey
+POST http://localhost:7000/encryption/rotateKey HTTP/1.1
