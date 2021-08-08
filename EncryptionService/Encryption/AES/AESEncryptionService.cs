@@ -21,14 +21,6 @@ namespace EncryptionService.Encryption.AES
 
             return aesKey;
         }
-        
-        private AESKey GetKeyByVersion(int version)
-        {
-            var key = _encryptionKeyManager.GetByVersion(version);
-            if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
-
-            return aesKey;
-        }
 
         private byte[] CreateIv()
         {
@@ -63,26 +55,29 @@ namespace EncryptionService.Encryption.AES
 
         public DecryptionResult Decrypt(string value)
         {
-            var decryptionRequest = new AESDecryptionRequest(value);
-            var aesKey = GetKeyByVersion(decryptionRequest.EncryptionKeyVersion);
-            
-            using var aes = Aes.Create();
-            var transform = aes.CreateDecryptor(aesKey.GetBytes(), decryptionRequest.Iv);
-            
-            string plaintext;
-            
-            using (MemoryStream memoryStream = new MemoryStream(decryptionRequest.EncryptedData))
+            try
             {
-                using (CryptoStream cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read))
-                {
-                    using (StreamReader srDecrypt = new StreamReader(cryptoStream))
-                    {
-                        plaintext = srDecrypt.ReadToEnd();
-                    }
-                }
+                var decryptionRequest = new AESDecryptionRequest(value);
+                var key = _encryptionKeyManager.GetByVersion(decryptionRequest.EncryptionKeyVersion);
+
+                if (key is not AESKey aesKey) throw new InvalidOperationException("Incorrect encryption key");
+
+                using var aes = Aes.Create();
+                var transform = aes.CreateDecryptor(aesKey.GetBytes(), decryptionRequest.Iv);
+
+                using MemoryStream memoryStream = new MemoryStream(decryptionRequest.EncryptedData);
+                using CryptoStream cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Read);
+                using StreamReader srDecrypt = new StreamReader(cryptoStream);
+                return SucceededDecryptionResult.WithValue(srDecrypt.ReadToEnd());
             }
-            
-            return SucceededDecryptionResult.WithValue(plaintext);
+            catch (FormatException)
+            {
+                return new FailedDecryptionResult(DecryptionError.IncorrectFormat);
+            }
+            catch (EncryptionKeyNotFoundException)
+            {
+                return new FailedDecryptionResult(DecryptionError.UnavailableEncryptionKey);
+            }
         }
     }
 }

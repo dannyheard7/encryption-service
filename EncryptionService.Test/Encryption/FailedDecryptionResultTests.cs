@@ -9,7 +9,7 @@ namespace EncryptionService.Test.Encryption
         [Fact]
         public void Succeeded_Should_Be_False()
         {
-            var result = FailedDecryptionResult.UnavailableEncryptionKey;
+            var result = new FailedDecryptionResult(DecryptionError.IncorrectFormat);
             result.Succeeded.Should().BeFalse();
         }
     }
