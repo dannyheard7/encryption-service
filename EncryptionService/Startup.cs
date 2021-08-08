@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using EncryptionService.Encryption;
 using EncryptionService.Encryption.AES;
+using EncryptionService.Encryption.Keys;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace EncryptionService
@@ -30,8 +24,10 @@ namespace EncryptionService
             services.AddResponseCompression();
             services.AddControllers();
             services.AddHealthChecks();
-            
-            //services.AddSingleton<IEncryptionService, AESEncryptionService>();
+
+            services
+                .AddSingleton<IEncryptionService, AESEncryptionService>()
+                .AddSingleton<IEncryptionKeyManager<AESKey>, InMemoryEncryptionKeyManager<AESKey>>();
             
             services.AddSwaggerGen(c =>
             {

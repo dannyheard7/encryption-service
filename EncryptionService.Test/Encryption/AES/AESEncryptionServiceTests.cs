@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EncryptionService.Encryption;
 using EncryptionService.Encryption.AES;
 using EncryptionService.Encryption.Keys;
@@ -57,19 +58,28 @@ namespace EncryptionService.Test.Encryption.AES
             (decryptionResult as FailedDecryptionResult)!.Error.Should().Be(DecryptionError.IncorrectFormat);
         }
         
-        [Fact]
-        public void Can_Encrypt_And_Decrypt_Value()
+        public static IEnumerable<object[]> ValuesToEncrypt =>
+            new List<string[]>
+            {
+                new string[] { "somevalue" },
+                new string[] { "2321231" },
+                new string[] { "" },
+                new string[] { new string('a', 5000) }
+            };
+        
+        [Theory]
+        [MemberData(nameof(ValuesToEncrypt))]
+        public void Can_Encrypt_And_Decrypt_Value(string valueToEncrypt)
         {
             var key = _aesKeyCreator.Create(1);
             _mockKeyManager.Setup(x => x.GetLatest()).Returns(key);
             _mockKeyManager.Setup(x => x.GetByVersion(key.Version)).Returns(key);
-
-            var stringToEncrypt = "valueToEncrypt";
-            var encryptedValue = _aesEncryptionService.Encrypt(stringToEncrypt);
+            
+            var encryptedValue = _aesEncryptionService.Encrypt(valueToEncrypt);
             var decryptionResult = _aesEncryptionService.Decrypt(encryptedValue);
 
             decryptionResult.Should().BeOfType<SucceededDecryptionResult>();
-            (decryptionResult as SucceededDecryptionResult)!.DecryptedValue.Should().Be(stringToEncrypt);
+            (decryptionResult as SucceededDecryptionResult)!.DecryptedValue.Should().Be(valueToEncrypt);
         }
     }
 }
