@@ -10,6 +10,7 @@ namespace EncryptionService.Test.Encryption.AES
 {
     public class AESEncryptionServiceTests
     {
+        private const int KeySize = 32;
         private readonly Mock<IEncryptionKeyManager<AESKey>> _mockKeyManager;
         private readonly AESEncryptionService _aesEncryptionService;
         private readonly AESKeyCreator _aesKeyCreator;
@@ -18,7 +19,7 @@ namespace EncryptionService.Test.Encryption.AES
         {
             _mockKeyManager = new Mock<IEncryptionKeyManager<AESKey>>();
 
-            _aesKeyCreator = new AESKeyCreator();
+            _aesKeyCreator = new AESKeyCreator(32);
             _aesEncryptionService = new AESEncryptionService(_mockKeyManager.Object);
         }
 

@@ -7,6 +7,9 @@ namespace EncryptionService.Encryption.AES
 {
     public class AESEncryptionService : IEncryptionService
     {
+        private const int KeySize = 32;
+        private const int IvSize = 16;
+            
         private readonly IEncryptionKeyManager<AESKey> _encryptionKeyManager;
 
         public AESEncryptionService(IEncryptionKeyManager<AESKey> encryptionKeyManager)
@@ -16,7 +19,7 @@ namespace EncryptionService.Encryption.AES
 
         private byte[] CreateIv()
         {
-            byte[] bytes = new byte[16];
+            byte[] bytes = new byte[IvSize];
             var rng = new RNGCryptoServiceProvider();
             rng.GetNonZeroBytes(bytes);
 
@@ -72,7 +75,7 @@ namespace EncryptionService.Encryption.AES
 
         public void RotateKey()
         {
-            _encryptionKeyManager.Rotate(new AESKeyCreator());
+            _encryptionKeyManager.Rotate(new AESKeyCreator(KeySize));
         }
     }
 }

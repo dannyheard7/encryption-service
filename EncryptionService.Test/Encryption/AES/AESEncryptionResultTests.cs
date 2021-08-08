@@ -7,11 +7,12 @@ namespace EncryptionService.Test.Encryption.AES
 {
     public class AESEncryptionResultTests
     {
+        private const int KeySize = 32;
         private readonly AESKeyCreator _aesKeyCreator;
 
         public AESEncryptionResultTests()
         {
-            _aesKeyCreator = new AESKeyCreator();
+            _aesKeyCreator = new AESKeyCreator(KeySize);
         }
 
         [Fact]
