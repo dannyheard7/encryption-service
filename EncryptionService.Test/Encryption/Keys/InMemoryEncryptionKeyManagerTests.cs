@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EncryptionService.Encryption.Keys;
@@ -24,7 +25,7 @@ namespace EncryptionService.Test.Encryption.Keys
 
         public InMemoryEncryptionKeyManagerTests()
         {
-            _keyManager = new InMemoryEncryptionKeyManager<TestKey>();
+            _keyManager = new InMemoryEncryptionKeyManager<TestKey>(Int32.MaxValue);
             _mockKeyCreator = new Mock<IEncryptionKeyCreator<TestKey>>();
         }
 
@@ -104,6 +105,16 @@ namespace EncryptionService.Test.Encryption.Keys
             _mockKeyCreator.Verify(x => x.Create(1), Times.Once);
             _mockKeyCreator.Verify(x => x.Create(2), Times.Once);
             _mockKeyCreator.Verify(x => x.Create(3), Times.Once);
+        }
+        
+        [Fact]
+        public void Rotate_Removes_Old_Keys_If_MaxNumber_Exceeded()
+        {
+            var keyManager = new InMemoryEncryptionKeyManager<TestKey>(1);
+            var key1 = SetupKey(keyManager);
+            var key2 = SetupKey(keyManager);
+
+            keyManager.Invoking(x => x.GetByVersion(key1.Version)).Should().Throw<EncryptionKeyNotFoundException>();
         }
     }
 }

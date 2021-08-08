@@ -1,3 +1,4 @@
+using System;
 using EncryptionService.Encryption;
 using EncryptionService.Encryption.AES;
 using EncryptionService.Encryption.Keys;
@@ -22,7 +23,7 @@ namespace EncryptionService
             services.AddResponseCompression();
             services.AddControllers();
             services.AddHealthChecks();
-
+            
             services
                 .AddSingleton<IEncryptionService, AESEncryptionService>()
                 .AddSingleton<IEncryptionKeyManager<AESKey>, InMemoryEncryptionKeyManager<AESKey>>();

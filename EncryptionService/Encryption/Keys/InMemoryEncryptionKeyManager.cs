@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -5,10 +6,21 @@ namespace EncryptionService.Encryption.Keys
 {
     public class InMemoryEncryptionKeyManager<T> : IEncryptionKeyManager<T> where T : class, IKey
     {
+        private readonly int _maxNumberActiveKeys;
         private readonly SortedDictionary<int, T> _activeKeys;
-
+        
         public InMemoryEncryptionKeyManager()
         {
+            _maxNumberActiveKeys = Int32.MaxValue;
+            _activeKeys = new SortedDictionary<int, T>();
+        }
+
+        public InMemoryEncryptionKeyManager(int maxNumberActiveKeys)
+        {
+            if (maxNumberActiveKeys < 1)
+                throw new ArgumentOutOfRangeException(nameof(maxNumberActiveKeys));
+            
+            _maxNumberActiveKeys = maxNumberActiveKeys;
             _activeKeys = new SortedDictionary<int, T>();
         }
 
@@ -42,6 +54,9 @@ namespace EncryptionService.Encryption.Keys
                 var newKey = creator.Create(newVersion);
             
                 _activeKeys.Add(newVersion, newKey);
+
+                if (_activeKeys.Count > 1 && _activeKeys.Count > _maxNumberActiveKeys)
+                    _activeKeys.Remove(_activeKeys.Keys.First());
             }
         }
     }
