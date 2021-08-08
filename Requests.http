@@ -1,0 +1,17 @@
+# @name encrypt
+POST https://localhost:5001/encryption/encrypt HTTP/1.1
+content-type: application/json
+
+{
+    "value": "somevalue"
+}
+
+
+@encryptedValue = {{encrypt.response.body.value}}
+
+POST https://localhost:5001/encryption/decrypt HTTP/1.1
+content-type: application/json
+
+{
+    "value":  {{encryptedValue}}
+}
