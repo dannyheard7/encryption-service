@@ -19,7 +19,7 @@ namespace EncryptionService.Test.Encryption.AES
         {
             _mockKeyManager = new Mock<IEncryptionKeyManager<AESKey>>();
 
-            _aesKeyCreator = new AESKeyCreator(32);
+            _aesKeyCreator = new AESKeyCreator(KeySize);
             _aesEncryptionService = new AESEncryptionService(_mockKeyManager.Object);
         }
 

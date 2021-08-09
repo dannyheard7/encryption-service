@@ -21,7 +21,7 @@ namespace EncryptionService.Test.Encryption.AES
         public void Throws_Exception_With_Invalid_KeySize()
         {
             Action act = () => new AESKeyCreator(1);
-            act.Should().Throw<InvalidOperationException>();
+            act.Should().Throw<ArgumentOutOfRangeException>();
         }
     }
 }

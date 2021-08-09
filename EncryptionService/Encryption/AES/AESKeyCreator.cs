@@ -13,7 +13,7 @@ namespace EncryptionService.Encryption.AES
         public AESKeyCreator(int keySize)
         {
             if (!_allowedKeySizes.Contains(keySize))
-                throw new InvalidOperationException($"Key size is invalid");
+                throw new ArgumentOutOfRangeException($"Key size is invalid");
             
             _keySize = keySize;
         }

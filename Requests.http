@@ -16,14 +16,14 @@ content-type: application/json
 }
 
 ### Decrypt EncryptedValue
-@encryptedValue = {{esEncrypt.response.body.value}}
+@esEncryptedValue = {{esEncrypt.response.body.value}}
 
 # @name esDecrypt
 POST http://localhost:5000/api/v1/decrypt HTTP/1.1
 content-type: application/json
 
 {
-    "value":  "{{encryptedValue}}"
+    "value":  "{{esEncryptedValue}}"
 }
 
 ### Rotate EncryptionKey

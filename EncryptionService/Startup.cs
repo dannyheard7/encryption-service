@@ -25,8 +25,8 @@ namespace EncryptionService
             services.AddHealthChecks();
             
             services
-                .AddSingleton<IEncryptionService, AESEncryptionService>()
-                .AddSingleton<IEncryptionKeyManager<AESKey>, InMemoryEncryptionKeyManager<AESKey>>();
+                .AddSingleton<IEncryptionKeyManager<AESKey>, InMemoryEncryptionKeyManager<AESKey>>()
+                .AddScoped<IEncryptionService, AESEncryptionService>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEncryptionService encryptionService)
